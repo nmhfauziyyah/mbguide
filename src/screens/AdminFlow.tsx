@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Building, ShieldAlert, BarChart2, Bell, AlertTriangle, 
-  ChevronRight, Award, FileText, Users, TrendingUp 
+  ChevronRight, Award, FileText, Users 
 } from 'lucide-react';
 import TopAppBar from '../components/TopAppBar';
 import BottomNavigation from '../components/BottomNavigation';
@@ -32,12 +32,6 @@ export const AdminFlow: React.FC<AdminFlowProps> = ({ onBackToRoles, triggerToas
     { name: 'Dapur Sehat Sudirman', reason: 'Grade AI di bawah target (72% layak) selama 2 batch berturut-turut.', priority: 'High', color: 'text-rose-500 bg-rose-50' },
     { name: 'Dapur Sehat Setiabudi', reason: 'IoT mendeteksi kenaikan suhu kulkas berulang.', priority: 'Medium', color: 'text-amber-500 bg-amber-50' }
   ];
-
-  // Handle generating recommendation
-  const handleGenerateInspections = () => {
-    setShowInspections(true);
-    triggerToast('Daftar Rekomendasi Audit Terkini Diperbarui!', 'success');
-  };
 
   return (
     <div className="w-full h-full bg-[#F4F7FB] flex flex-col justify-between overflow-hidden relative">
