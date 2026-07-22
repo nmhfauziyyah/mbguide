@@ -55,7 +55,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onComplete }) => {
           <div className="w-28 h-28 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 flex items-center justify-center shadow-2xl relative">
             {/* Inner Brand Image */}
             <div className="w-20 h-20 rounded-2xl bg-white flex items-center justify-center shadow-[0_0_20px_rgba(146,208,93,0.3)] overflow-hidden">
-              <img src="/mbguide.png" className="w-16 h-16 object-contain" alt="MBGuide Logo" />
+              <img src="./mbguide.png" className="w-16 h-16 object-contain" alt="MBGuide Logo" />
             </div>
             
             {/* Animated Sparkle */}

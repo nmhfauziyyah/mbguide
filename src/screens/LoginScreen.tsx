@@ -67,7 +67,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ role, onLoginSuccess, 
           {/* Brand Logo in Login */}
           <div className="flex flex-col items-center space-y-1.5 select-none">
             <div className="w-14 h-14 rounded-2xl bg-white shadow-md flex items-center justify-center overflow-hidden border border-slate-100">
-              <img src="/mbguide.png" className="w-11 h-11 object-contain" alt="MBGuide Logo" />
+              <img src="./mbguide.png" className="w-11 h-11 object-contain" alt="MBGuide Logo" />
             </div>
             <span className="text-[8px] font-extrabold text-mbg-primary tracking-widest uppercase">MBGuide Secure Login</span>
           </div>
