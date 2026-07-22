@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+  --color-mbg-primary: #071E49;
+  --color-mbg-secondary: #92D05D;
+  --color-mbg-accent: #B5E0EA;
+  --color-mbg-supporting: #D1B06C;
+  --color-mbg-bg: #F4F7FB;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Custom Liquid Glass styles */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.liquid-glass-dark {
+  background: rgba(7, 30, 73, 0.75);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border: 1px solid rgba(181, 224, 234, 0.2);
+}
+
+.liquid-glass-accent {
+  background: rgba(181, 224, 234, 0.35);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.liquid-glass-secondary {
+  background: rgba(146, 208, 93, 0.25);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(146, 208, 93, 0.3);
+}
+
+/* Ambient Fluid Background Blob Animation */
+.ambient-mesh {
+  background-color: #f4f7fb;
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(181, 224, 234, 0.6) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(146, 208, 93, 0.35) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(209, 176, 108, 0.15) 0px, transparent 50%),
+    radial-gradient(at 80% 90%, rgba(7, 30, 73, 0.1) 0px, transparent 50%),
+    radial-gradient(at 10% 80%, rgba(181, 224, 234, 0.4) 0px, transparent 50%);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom scrollbars for scrollable views */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(7, 30, 73, 0.15);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(7, 30, 73, 0.25);
+}
+
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  background-color: #f8fafc;
+}
