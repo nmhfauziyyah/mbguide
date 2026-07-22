@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Utensils, Camera, QrCode, ArrowRight, 
-  CheckCircle, RefreshCw, Layers, UserCircle, MapPin, ShieldCheck, Navigation 
+  Utensils, Camera, QrCode, 
+  RefreshCw, Layers, UserCircle, MapPin, ShieldCheck, Navigation 
 } from 'lucide-react';
 import MapCard from '../components/MapCard';
 import TopAppBar from '../components/TopAppBar';
