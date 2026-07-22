@@ -15,12 +15,44 @@ import AIResultCard from '../components/AIResultCard';
 interface KitchenFlowProps {
   onBackToRoles: () => void;
   triggerToast: (msg: string, type: 'success' | 'info' | 'warning') => void;
+  menuData: {
+    name: string;
+    nasiGram: number;
+    proteinGram: number;
+    proteinType: string;
+    sayurGram: number;
+    sayurType: string;
+    calories: number;
+    protein: number;
+    karbo: number;
+    lemak: number;
+  };
+  setMenuData: React.Dispatch<React.SetStateAction<{
+    name: string;
+    nasiGram: number;
+    proteinGram: number;
+    proteinType: string;
+    sayurGram: number;
+    sayurType: string;
+    calories: number;
+    protein: number;
+    karbo: number;
+    lemak: number;
+  }>>;
 }
 
-export const KitchenFlow: React.FC<KitchenFlowProps> = ({ onBackToRoles, triggerToast }) => {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'scan' | 'qr-batch' | 'lokasi'>('dashboard');
+export const KitchenFlow: React.FC<KitchenFlowProps> = ({ onBackToRoles, triggerToast, menuData, setMenuData }) => {
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'scan' | 'qr-batch' | 'menu' | 'lokasi'>('dashboard');
   const [geoValidated, setGeoValidated] = useState<null | boolean>(null);
   const [scanState, setScanState] = useState<'idle' | 'scanning' | 'done'>('idle');
+  
+  // Menu manual input editing states
+  const [editName, setEditName] = useState(menuData.name);
+  const [editNasi, setEditNasi] = useState(menuData.nasiGram);
+  const [editProteinGram, setEditProteinGram] = useState(menuData.proteinGram);
+  const [editProteinType, setEditProteinType] = useState(menuData.proteinType);
+  const [editSayurGram, setEditSayurGram] = useState(menuData.sayurGram);
+  const [editSayurType, setEditSayurType] = useState(menuData.sayurType);
   
   // Dummy generated QR passes
   const [qrPasses, setQrPasses] = useState([
@@ -32,7 +64,7 @@ export const KitchenFlow: React.FC<KitchenFlowProps> = ({ onBackToRoles, trigger
   const handleGenerateQR = () => {
     const newPass = {
       id: `PAS-0013-MT`,
-      menu: 'Nasi Salmon & Brokoli',
+      menu: menuData.name,
       qty: 450,
       time: '08:35 WIB',
       school: 'SDN 01 Menteng',
@@ -42,6 +74,30 @@ export const KitchenFlow: React.FC<KitchenFlowProps> = ({ onBackToRoles, trigger
     triggerToast('QR Digital Passport Berhasil Diterbitkan!', 'success');
     setActiveTab('qr-batch');
     setScanState('idle');
+  };
+
+  // Handle saving and reporting menu data to BGN
+  const handleSaveMenu = () => {
+    // Simple nutrition estimation based on grams
+    const calories = Math.round(editNasi * 1.3 + editProteinGram * 2.1 + editSayurGram * 0.3);
+    const protein = Math.round(editProteinGram * 0.25 + editSayurGram * 0.03 + editNasi * 0.03);
+    const karbo  = Math.round(editNasi * 0.5 + editSayurGram * 0.06);
+    const lemak  = Math.round(editProteinGram * 0.08 + editNasi * 0.02);
+
+    setMenuData({
+      name: editName,
+      nasiGram: editNasi,
+      proteinGram: editProteinGram,
+      proteinType: editProteinType,
+      sayurGram: editSayurGram,
+      sayurType: editSayurType,
+      calories,
+      protein,
+      karbo,
+      lemak,
+    });
+    setActiveTab('dashboard');
+    triggerToast('Data menu berhasil dilaporkan ke BGN Pusat! 📊', 'success');
   };
 
   return (
@@ -120,7 +176,7 @@ export const KitchenFlow: React.FC<KitchenFlowProps> = ({ onBackToRoles, trigger
                 <SensorCard kitchenName="Kondisi Sterilitas Ruang Dapur" interactive={false} />
               </div>
 
-              {/* Bottom Row: 4. Today's Menu Spec + Komposisi Input */}
+              {/* Bottom Row: 4. Today's Menu Spec */}
               <GlassCard className="p-3 flex flex-col relative overflow-hidden shrink-0 space-y-2">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-1.5 shrink-0">
                   <span className="text-[8.5px] font-extrabold text-mbg-primary uppercase tracking-wider">Menu Makan Hari Ini</span>
@@ -133,17 +189,17 @@ export const KitchenFlow: React.FC<KitchenFlowProps> = ({ onBackToRoles, trigger
                     alt="Salmon Menu"
                   />
                   <div className="space-y-0.5 text-left leading-tight flex-1">
-                    <h4 className="font-extrabold text-[9.5px] text-mbg-primary">Nasi Salmon & Tumis Sayur Sehat</h4>
+                    <h4 className="font-extrabold text-[9.5px] text-mbg-primary">{menuData.name}</h4>
                     {/* Komposisi input rows */}
                     <div className="flex gap-2 text-[8px] text-slate-600 mt-0.5">
-                      <span className="bg-white border border-slate-100 px-1.5 py-0.5 rounded font-bold">Nasi 150g</span>
-                      <span className="bg-white border border-slate-100 px-1.5 py-0.5 rounded font-bold">Salmon 80g</span>
-                      <span className="bg-white border border-slate-100 px-1.5 py-0.5 rounded font-bold">Brokoli 50g</span>
+                      <span className="bg-white border border-slate-100 px-1.5 py-0.5 rounded font-bold">Nasi {menuData.nasiGram}g</span>
+                      <span className="bg-white border border-slate-100 px-1.5 py-0.5 rounded font-bold">{menuData.proteinType} {menuData.proteinGram}g</span>
+                      <span className="bg-white border border-slate-100 px-1.5 py-0.5 rounded font-bold">{menuData.sayurType} {menuData.sayurGram}g</span>
                     </div>
                     <div className="flex gap-2 text-[8px] text-slate-500 mt-0.5">
-                      <span>620 kkal</span><span>•</span>
-                      <span>28g Protein</span><span>•</span>
-                      <span>75g Karbo</span>
+                      <span>{menuData.calories} kkal</span><span>•</span>
+                      <span>{menuData.protein}g Protein</span><span>•</span>
+                      <span>{menuData.karbo}g Karbo</span>
                     </div>
                   </div>
                 </div>
@@ -159,9 +215,7 @@ export const KitchenFlow: React.FC<KitchenFlowProps> = ({ onBackToRoles, trigger
                   Scan AI Kelayakan
                 </button>
                 <button
-                  onClick={() => {
-                    handleGenerateQR();
-                  }}
+                  onClick={() => { handleGenerateQR(); }}
                   className="py-2.5 px-3 rounded-xl bg-mbg-secondary/20 text-mbg-primary font-extrabold text-[9.5px] border border-mbg-secondary/40 flex items-center justify-center gap-1.5"
                 >
                   <QrCode className="w-3.5 h-3.5 text-mbg-primary" />
@@ -342,7 +396,112 @@ export const KitchenFlow: React.FC<KitchenFlowProps> = ({ onBackToRoles, trigger
             </motion.div>
           )}
 
-          {/* TAB 4: VERIFIKASI LOKASI */}
+          {/* TAB 4: MANUAL MENU INPUT */}
+          {activeTab === 'menu' && (
+            <motion.div
+              key="menu"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="flex-1 flex flex-col space-y-2.5 overflow-hidden text-left"
+            >
+              <GlassCard className="p-3 flex flex-col flex-1 min-h-0 justify-between">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center border-b border-slate-100 pb-1.5 shrink-0">
+                    <span className="text-[8.5px] font-extrabold text-mbg-primary uppercase tracking-wider flex items-center gap-1">
+                      <Layers className="w-3.5 h-3.5" /> Pencatatan Gizi Manual
+                    </span>
+                    <span className="text-[7.5px] font-extrabold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-full">Dapur Menteng</span>
+                  </div>
+
+                  <p className="text-[7.5px] text-slate-500 leading-normal shrink-0">
+                    Input komposisi hidangan hari ini. Kandungan gizi makro & energi otomatis terkalkulasi dan disinkronkan ke pusat serta penerima manfaat.
+                  </p>
+
+                  <div className="space-y-2 flex-1 overflow-y-auto pr-0.5">
+                    {/* Nama Menu */}
+                    <div className="space-y-0.5">
+                      <label className="text-[7px] font-extrabold text-slate-400 uppercase tracking-wider">Nama Menu</label>
+                      <input
+                        value={editName}
+                        onChange={e => setEditName(e.target.value)}
+                        className="w-full px-2 py-1 text-[8.5px] rounded-lg border border-slate-200 bg-white/80 focus:outline-none focus:ring-1 focus:ring-mbg-secondary font-semibold"
+                        placeholder="cth: Nasi Salmon & Tumis Sayur Sehat"
+                      />
+                    </div>
+
+                    {/* Grams Grid */}
+                    <div className="grid grid-cols-3 gap-1.5">
+                      <div className="space-y-0.5">
+                        <label className="text-[7px] font-extrabold text-slate-400 uppercase tracking-wider">Nasi (Gram)</label>
+                        <input
+                          type="number"
+                          value={editNasi}
+                          onChange={e => setEditNasi(Number(e.target.value))}
+                          min={0}
+                          className="w-full px-2 py-1 text-[8.5px] rounded-lg border border-slate-200 bg-white/80 focus:outline-none focus:ring-1 focus:ring-mbg-secondary font-bold"
+                        />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="text-[7px] font-extrabold text-slate-400 uppercase tracking-wider">Protein (Gram)</label>
+                        <input
+                          type="number"
+                          value={editProteinGram}
+                          onChange={e => setEditProteinGram(Number(e.target.value))}
+                          min={0}
+                          className="w-full px-2 py-1 text-[8.5px] rounded-lg border border-slate-200 bg-white/80 focus:outline-none focus:ring-1 focus:ring-mbg-secondary font-bold"
+                        />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="text-[7px] font-extrabold text-slate-400 uppercase tracking-wider">Sayur (Gram)</label>
+                        <input
+                          type="number"
+                          value={editSayurGram}
+                          onChange={e => setEditSayurGram(Number(e.target.value))}
+                          min={0}
+                          className="w-full px-2 py-1 text-[8.5px] rounded-lg border border-slate-200 bg-white/80 focus:outline-none focus:ring-1 focus:ring-mbg-secondary font-bold"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Types Grid */}
+                    <div className="grid grid-cols-2 gap-1.5">
+                      <div className="space-y-0.5">
+                        <label className="text-[7px] font-extrabold text-slate-400 uppercase tracking-wider">Jenis Protein</label>
+                        <input
+                          value={editProteinType}
+                          onChange={e => setEditProteinType(e.target.value)}
+                          className="w-full px-2 py-1 text-[8.5px] rounded-lg border border-slate-200 bg-white/80 focus:outline-none focus:ring-1 focus:ring-mbg-secondary font-semibold"
+                          placeholder="cth: Salmon, Ayam"
+                        />
+                      </div>
+                      <div className="space-y-0.5">
+                        <label className="text-[7px] font-extrabold text-slate-400 uppercase tracking-wider">Jenis Sayur</label>
+                        <input
+                          value={editSayurType}
+                          onChange={e => setEditSayurType(e.target.value)}
+                          className="w-full px-2 py-1 text-[8.5px] rounded-lg border border-slate-200 bg-white/80 focus:outline-none focus:ring-1 focus:ring-mbg-secondary font-semibold"
+                          placeholder="cth: Brokoli, Bayam"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Submit Action */}
+                <button
+                  onClick={handleSaveMenu}
+                  className="w-full py-2 rounded-xl bg-mbg-primary text-white font-extrabold text-[9px] flex items-center justify-center gap-1.5 shadow-sm transition active:scale-[0.98] shrink-0 mt-2"
+                >
+                  <UserCircle className="w-3.5 h-3.5 text-mbg-secondary" />
+                  Simpan & Laporkan ke BGN Pusat
+                </button>
+              </GlassCard>
+            </motion.div>
+          )}
+
+          {/* TAB 5: VERIFIKASI LOKASI */}
           {activeTab === 'lokasi' && (
             <motion.div
               key="lokasi"

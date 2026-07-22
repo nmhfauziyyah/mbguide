@@ -14,9 +14,21 @@ import StatusBadge from '../components/StatusBadge';
 interface BeneficiaryFlowProps {
   onBackToRoles: () => void;
   triggerToast: (msg: string, type: 'success' | 'info' | 'warning') => void;
+  menuData: {
+    name: string;
+    nasiGram: number;
+    proteinGram: number;
+    proteinType: string;
+    sayurGram: number;
+    sayurType: string;
+    calories: number;
+    protein: number;
+    karbo: number;
+    lemak: number;
+  };
 }
 
-export const BeneficiaryFlow: React.FC<BeneficiaryFlowProps> = ({ onBackToRoles, triggerToast }) => {
+export const BeneficiaryFlow: React.FC<BeneficiaryFlowProps> = ({ onBackToRoles, triggerToast, menuData }) => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'history' | 'complaint'>('dashboard');
   const [currentView, setCurrentView] = useState<'default' | 'scanner' | 'passport'>('default');
   const [rating, setRating] = useState<number>(0);
@@ -125,7 +137,7 @@ export const BeneficiaryFlow: React.FC<BeneficiaryFlowProps> = ({ onBackToRoles,
                 <div className="flex justify-between items-start">
                   <div>
                     <span className="text-[7.5px] font-extrabold bg-mbg-secondary/20 text-mbg-primary border border-mbg-secondary/40 px-2 py-0.5 rounded-full uppercase tracking-wider">AI & IoT Verified</span>
-                    <h3 className="font-extrabold text-[11px] text-mbg-primary mt-1 leading-tight">Nasi Salmon & Brokoli</h3>
+                    <h3 className="font-extrabold text-[11px] text-mbg-primary mt-1 leading-tight">{menuData.name}</h3>
                     <p className="text-[8px] text-slate-400 font-bold uppercase tracking-wider">Batch ID: #PAS-0012-MT</p>
                   </div>
                   <div className="flex gap-2 items-center">
@@ -139,7 +151,12 @@ export const BeneficiaryFlow: React.FC<BeneficiaryFlowProps> = ({ onBackToRoles,
 
                 {/* Gizi grid */}
                 <div className="grid grid-cols-4 gap-1 text-center text-[8px]">
-                  {[['Protein','28g'],['Karbo','75g'],['Lemak','18g'],['Energi','620k']].map(([k,v]) => (
+                  {[
+                    ['Protein', `${menuData.protein}g`],
+                    ['Karbo', `${menuData.karbo}g`],
+                    ['Lemak', `${menuData.lemak}g`],
+                    ['Energi', `${menuData.calories}k`]
+                  ].map(([k,v]) => (
                     <div key={k} className="bg-white/80 p-1 rounded-lg border border-slate-100">
                       <span className="block text-[6.5px] text-slate-400 uppercase">{k}</span>
                       <span className="font-extrabold text-mbg-primary">{v}</span>
@@ -210,8 +227,10 @@ export const BeneficiaryFlow: React.FC<BeneficiaryFlowProps> = ({ onBackToRoles,
                   <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=150&q=80"
                     className="w-14 h-14 rounded-xl object-cover shrink-0 border border-slate-100 shadow-sm" alt="Salmon meal" />
                   <div className="space-y-0.5 flex-1">
-                    <h4 className="font-extrabold text-[10px] text-mbg-primary leading-tight">Nasi Salmon & Tumis Sayur Sehat</h4>
-                    <p className="text-[8.5px] text-slate-500 leading-tight">Salmon panggang, brokoli kukus, susu UHT 125ml, jeruk segar.</p>
+                    <h4 className="font-extrabold text-[10px] text-mbg-primary leading-tight">{menuData.name}</h4>
+                    <p className="text-[8.5px] text-slate-500 leading-tight">
+                      Nasi ({menuData.nasiGram}g), {menuData.proteinType} ({menuData.proteinGram}g), {menuData.sayurType} ({menuData.sayurGram}g). Susu UHT 125ml & Jeruk Segar.
+                    </p>
                     {/* Inline rating + komentar */}
                     <div className="pt-0.5 space-y-1">
                       <div className="flex items-center gap-1">

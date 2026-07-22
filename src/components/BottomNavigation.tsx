@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   Home, Camera, QrCode, Truck, 
   Map, ShieldAlert, Utensils, 
-  History, AlertTriangle, MapPin
+  History, AlertTriangle, MapPin, ClipboardList
 } from 'lucide-react';
 
 interface BottomNavigationProps {
@@ -23,6 +23,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
           { id: 'dashboard', label: 'Dapur', icon: Home },
           { id: 'scan', label: 'Scan AI', icon: Camera },
           { id: 'qr-batch', label: 'Batch QR', icon: QrCode },
+          { id: 'menu', label: 'Menu', icon: ClipboardList },
           { id: 'lokasi', label: 'Lokasi', icon: MapPin },
         ];
       case 'distributor':
@@ -34,6 +35,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
         return [
           { id: 'dashboard', label: 'Command', icon: ShieldAlert },
           { id: 'map', label: 'Peta', icon: Map },
+          { id: 'menu', label: 'Menu', icon: ClipboardList },
         ];
       case 'beneficiary':
         return [

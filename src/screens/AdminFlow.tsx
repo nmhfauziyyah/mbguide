@@ -13,12 +13,25 @@ import StatisticCard from '../components/StatisticCard';
 interface AdminFlowProps {
   onBackToRoles: () => void;
   triggerToast: (msg: string, type: 'success' | 'info' | 'warning') => void;
+  menuData: {
+    name: string;
+    nasiGram: number;
+    proteinGram: number;
+    proteinType: string;
+    sayurGram: number;
+    sayurType: string;
+    calories: number;
+    protein: number;
+    karbo: number;
+    lemak: number;
+  };
 }
 
-export const AdminFlow: React.FC<AdminFlowProps> = ({ onBackToRoles, triggerToast }) => {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'map'>('dashboard');
+export const AdminFlow: React.FC<AdminFlowProps> = ({ onBackToRoles, triggerToast, menuData }) => {
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'map' | 'menu'>('dashboard');
   const [activeChart, setActiveChart] = useState<0 | 1>(0);
   const [showInspections, setShowInspections] = useState(false);
+  const [menuSubTab, setMenuSubTab] = useState<'passport' | 'history'>('passport');
   const [verificationStatus, setVerificationStatus] = useState<null | 'approved' | 'rejected'>(null);
 
   // Simulated system alerts
@@ -164,7 +177,6 @@ export const AdminFlow: React.FC<AdminFlowProps> = ({ onBackToRoles, triggerToas
                           </div>
                         </GlassCard>
                       )}
-
                       {/* Rekomendasi Audit — toggle button */}
                       <div className="space-y-1.5 shrink-0">
                         <button
@@ -312,7 +324,184 @@ export const AdminFlow: React.FC<AdminFlowProps> = ({ onBackToRoles, triggerToas
             </motion.div>
           )}
 
-          {/* TAB 2: GEOGRAPHIC MONITORING MAP */}
+          {/* TAB 3: MENU LAPORAN & RIWAYAT (Terintegrasi) */}
+          {activeTab === 'menu' && (
+            <motion.div
+              key="menu-tab"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="flex-1 flex flex-col space-y-2 overflow-hidden text-left"
+            >
+              {/* Internal Tab Switcher for Admin Menu Review */}
+              <div className="bg-white/80 border border-slate-100 p-0.5 rounded-xl flex text-[9px] font-extrabold shadow-sm select-none shrink-0">
+                <button
+                  type="button"
+                  onClick={() => setMenuSubTab('passport')}
+                  className={`flex-1 py-1 rounded-lg transition ${
+                    menuSubTab === 'passport' ? 'bg-mbg-primary text-white shadow-sm' : 'text-slate-500 hover:text-mbg-primary'
+                  }`}
+                >
+                  🟢 Paspor Gizi
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMenuSubTab('history')}
+                  className={`flex-1 py-1 rounded-lg transition ${
+                    menuSubTab === 'history' ? 'bg-mbg-primary text-white shadow-sm' : 'text-slate-500 hover:text-mbg-primary'
+                  }`}
+                >
+                  📅 Riwayat & Jadwal
+                </button>
+              </div>
+
+              {/* Subtab content container */}
+              <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-0.5">
+                {menuSubTab === 'passport' && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-2 pb-2">
+                    {/* Header Card */}
+                    <GlassCard className="p-3 space-y-2 relative overflow-hidden border-2 border-mbg-secondary shrink-0">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <span className="text-[7.5px] font-extrabold bg-mbg-secondary/20 text-mbg-primary border border-mbg-secondary/40 px-2 py-0.5 rounded-full uppercase tracking-wider">AI & IoT Verified</span>
+                          <h3 className="font-extrabold text-[11px] text-mbg-primary mt-1 leading-tight">{menuData.name}</h3>
+                          <p className="text-[8px] text-slate-400 font-bold uppercase tracking-wider">BATCH ID: #PAS-0012-MT</p>
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          <div className="text-right">
+                            <span className="text-[7px] text-slate-400 font-bold uppercase block">Skor Mutu</span>
+                            <span className="text-lg font-extrabold text-mbg-primary">98</span><span className="text-[9px] text-slate-400">/100</span>
+                          </div>
+                          <div className="px-2 py-1 rounded-xl bg-emerald-100 border border-emerald-200 text-emerald-800 font-bold text-[9px] text-center">
+                            • Grade A
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Gizi grid */}
+                      <div className="grid grid-cols-4 gap-1 text-center text-[8px]">
+                        {[
+                          ['Protein', `${menuData.protein}g`],
+                          ['Karbo', `${menuData.karbo}g`],
+                          ['Lemak', `${menuData.lemak}g`],
+                          ['Energi', `${menuData.calories}k`]
+                        ].map(([k,v]) => (
+                          <div key={k} className="bg-white/80 p-1 rounded-lg border border-slate-100">
+                            <span className="block text-[6.5px] text-slate-400 uppercase">{k}</span>
+                            <span className="font-extrabold text-mbg-primary">{v}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Meta row */}
+                      <div className="grid grid-cols-3 gap-1 text-[7.5px] text-center">
+                        <div className="bg-slate-50 border border-slate-100 p-1 rounded-lg"><span className="text-slate-400 block text-[6.5px] uppercase">Tgl Produksi</span><span className="font-extrabold text-mbg-primary">22 Jul 2026</span></div>
+                        <div className="bg-slate-50 border border-slate-100 p-1 rounded-lg"><span className="text-slate-400 block text-[6.5px] uppercase">Distribusi</span><span className="font-extrabold text-mbg-primary">09:00 WIB</span></div>
+                        <div className="bg-amber-50 border border-amber-100 p-1 rounded-lg"><span className="text-amber-600 block text-[6.5px] uppercase">Alergen</span><span className="font-extrabold text-amber-800">Ikan, Susu</span></div>
+                      </div>
+
+                      {/* Distributor */}
+                      <div className="bg-mbg-primary/5 border border-mbg-primary/10 px-2 py-1 rounded-lg text-[8px]">
+                        <span className="text-[6.5px] font-extrabold text-slate-400 uppercase block">Asal Distributor</span>
+                        <span className="font-extrabold text-mbg-primary">PT. Berkah Pangan Nusantara</span>
+                      </div>
+
+                      {/* IoT Higienitas + Geofencing */}
+                      <div className="grid grid-cols-2 gap-1 text-[8.5px]">
+                        <div className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-100 px-2 py-1 rounded-lg text-emerald-800 font-semibold">
+                          <span>🌡️</span>
+                          <div>
+                            <span className="text-[6.5px] text-emerald-600 block uppercase font-bold leading-none">IoT Higienitas</span>
+                            <span className="text-[7.5px] font-bold">Layak • 22.1°C</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 bg-blue-50 border border-blue-100 px-2 py-1 rounded-lg text-blue-800 font-semibold">
+                          <span>📍</span>
+                          <div>
+                            <span className="text-[6.5px] text-blue-600 block uppercase font-bold leading-none">Geofencing GPS</span>
+                            <span className="text-[7.5px] font-bold">Lokasi Terverifikasi</span>
+                          </div>
+                        </div>
+                      </div>
+                    </GlassCard>
+
+                    {/* Audit Trail */}
+                    <GlassCard className="p-3 space-y-2">
+                      <h4 className="text-[8px] font-extrabold text-mbg-primary uppercase tracking-wider flex items-center gap-1">
+                        🛡️ Audit Trail & Rantai Pasok Gizi
+                      </h4>
+                      <div className="space-y-2 border-l border-slate-200 pl-3.5 ml-1.5 text-[8px] relative">
+                        {[
+                          { title: 'Diproduksi - Dapur Sehat Menteng', desc: 'Lolos audit IoT sterilitas & AI bahan baku', time: '08:15' },
+                          { title: 'Verifikasi Gizi AI (Grade A)', desc: `Protein ${menuData.protein}g • Karbo ${menuData.karbo}g • ${menuData.calories} kcal`, time: '08:22' },
+                          { title: 'Logistik & Segel QR Boks', desc: 'Suhu stabil 19.5°C, segel digital terkunci', time: '08:45' }
+                        ].map((step, idx) => (
+                          <div key={idx} className="relative">
+                            <span className="absolute -left-[19.5px] top-0.5 w-2 h-2 rounded-full bg-emerald-500 border border-white" />
+                            <div className="flex justify-between font-bold">
+                              <span className="text-slate-800">{step.title}</span>
+                              <span className="text-slate-400">{step.time}</span>
+                            </div>
+                            <span className="text-slate-500 block leading-tight">{step.desc}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </GlassCard>
+                  </motion.div>
+                )}
+
+                {menuSubTab === 'history' && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3 pb-2 text-[8px]">
+                    {/* Jadwal Mingguan */}
+                    <GlassCard className="p-3 space-y-2">
+                      <h4 className="text-[8.5px] font-extrabold text-mbg-primary uppercase tracking-wider">
+                        📅 Jadwal Distribusi Minggu Ini
+                      </h4>
+                      <div className="space-y-1.5">
+                        {[
+                          { day: 'Rabu, 22 Jul', desc: 'Nasi Salmon & Sayur • 07:30 WIB', status: 'Selesai', color: 'text-emerald-700 bg-emerald-50 border-emerald-100' },
+                          { day: 'Kamis, 23 Jul', desc: 'Nasi Ayam Fillet Madu • 07:30 WIB', status: 'Besok', color: 'text-amber-700 bg-amber-50 border-amber-100' },
+                          { day: 'Jumat, 24 Jul', desc: 'Nasi Telur Perkedel • 07:30 WIB', status: 'Terjadwal', color: 'text-slate-500 bg-slate-50 border-slate-100' }
+                        ].map((j, i) => (
+                          <div key={i} className="flex justify-between items-center p-1.5 bg-white/70 border border-slate-100/50 rounded-xl">
+                            <div>
+                              <span className="font-extrabold text-slate-800 block">{j.day}</span>
+                              <span className="text-slate-500 text-[7.5px]">{j.desc}</span>
+                            </div>
+                            <span className={`text-[7px] px-1.5 py-0.5 rounded-full font-bold border uppercase shrink-0 ${j.color}`}>{j.status}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </GlassCard>
+
+                    {/* Riwayat Penerimaan */}
+                    <GlassCard className="p-3 space-y-2">
+                      <h4 className="text-[8.5px] font-extrabold text-mbg-primary uppercase tracking-wider">
+                        📋 Riwayat Penerimaan MBG
+                      </h4>
+                      <div className="space-y-1.5">
+                        {[
+                          { name: menuData.name, info: `Hari ini • ${menuData.calories} kcal`, grade: 'Grade A', color: 'text-emerald-700 bg-emerald-50 border-emerald-100' },
+                          { name: 'Nasi Ayam Fillet Saus Madu', info: 'Selasa, 21 Jul • 580 kcal', grade: 'Grade A', color: 'text-emerald-700 bg-emerald-50 border-emerald-100' },
+                          { name: 'Nasi Telur Semur & Bayam', info: 'Senin, 20 Jul • 545 kcal', grade: 'Grade B', color: 'text-amber-700 bg-amber-50 border-amber-100' },
+                          { name: 'Nasi Ikan Patin Bumbu', info: 'Jumat, 18 Jul • 610 kcal', grade: 'Grade A', color: 'text-emerald-700 bg-emerald-50 border-emerald-100' }
+                        ].map((h, i) => (
+                          <div key={i} className="flex justify-between items-center p-1.5 bg-white/70 border border-slate-100/50 rounded-xl">
+                            <div>
+                              <span className="font-extrabold text-slate-800 block">{h.name}</span>
+                              <span className="text-slate-500 text-[7.5px]">{h.info}</span>
+                            </div>
+                            <span className={`text-[7px] px-1.5 py-0.5 rounded-full font-bold border shrink-0 ${h.color}`}>{h.grade}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </GlassCard>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          )}
           {activeTab === 'map' && (
             <motion.div
               key="map"

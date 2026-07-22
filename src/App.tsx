@@ -16,10 +16,36 @@ interface ToastState {
   type: 'success' | 'info' | 'warning';
 }
 
+export interface MenuData {
+  name: string;
+  nasiGram: number;
+  proteinGram: number;
+  proteinType: string;
+  sayurGram: number;
+  sayurType: string;
+  calories: number;
+  protein: number;
+  karbo: number;
+  lemak: number;
+}
+
 function App() {
   const [currentScreen, setCurrentScreen] = useState<'splash' | 'roles' | 'login' | 'app'>('splash');
   const [activeRole, setActiveRole] = useState<'kitchen' | 'distributor' | 'admin' | 'beneficiary' | null>(null);
   const [toast, setToast] = useState<ToastState | null>(null);
+  
+  const [menuData, setMenuData] = useState<MenuData>({
+    name: 'Nasi Salmon & Tumis Sayur Sehat',
+    nasiGram: 150,
+    proteinGram: 80,
+    proteinType: 'Salmon',
+    sayurGram: 50,
+    sayurType: 'Brokoli',
+    calories: 620,
+    protein: 28,
+    karbo: 75,
+    lemak: 18
+  });
 
   // Auto-dismiss toast
   useEffect(() => {
@@ -197,7 +223,12 @@ function App() {
             )}
 
             {currentScreen === 'app' && activeRole === 'kitchen' && (
-              <KitchenFlow onBackToRoles={navigateToRoles} triggerToast={triggerToast} />
+              <KitchenFlow 
+                onBackToRoles={navigateToRoles} 
+                triggerToast={triggerToast} 
+                menuData={menuData}
+                setMenuData={setMenuData}
+              />
             )}
 
             {currentScreen === 'app' && activeRole === 'distributor' && (
@@ -205,11 +236,15 @@ function App() {
             )}
 
             {currentScreen === 'app' && activeRole === 'admin' && (
-              <AdminFlow onBackToRoles={navigateToRoles} triggerToast={triggerToast} />
+              <AdminFlow onBackToRoles={navigateToRoles} triggerToast={triggerToast} menuData={menuData} />
             )}
 
             {currentScreen === 'app' && activeRole === 'beneficiary' && (
-              <BeneficiaryFlow onBackToRoles={navigateToRoles} triggerToast={triggerToast} />
+              <BeneficiaryFlow 
+                onBackToRoles={navigateToRoles} 
+                triggerToast={triggerToast} 
+                menuData={menuData}
+              />
             )}
 
           </div>
